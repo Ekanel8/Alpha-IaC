@@ -1,0 +1,52 @@
+---
+- name: Task-1
+  hosts: all
+  become: yes
+
+  vars:
+    env_vars: "{{ lookup('file', '.env') | from_yaml }}"
+    domain_name: "{{ look('env', 'TARGET_DOMAIN') | default('infra.net', true) }}"
+  tasks:
+
+  - name: Ping servers
+    ping:
+
+  - name: Pkgs installation part 1/2
+    apt: 
+      name: 
+        - iptables 
+        - htop 
+        - ntpsec
+        - curl 
+        - wget
+        - rsyslog
+        - fail2ban
+        - auditd
+        - net-tools
+        - dkms
+        - linux-headers-amd64
+        - build-essential
+      state: latest
+
+  - name: Set local DNS server
+    copy:
+      dest: /etc/resolv.conf
+      content: |
+        nameserver 192.168.0.10
+        search infra.net
+
+  - name: ntpsec conf
+    template:
+      src: ntp.conf
+      dest: /etc/ntpsec/ntp.conf
+
+  - name: ntpsec restart
+    service: 
+      name: ntpsec
+      state: restarted
+
+  - name: Set timezone
+    timezone:
+      name: Europe/Moscow
+
+...
