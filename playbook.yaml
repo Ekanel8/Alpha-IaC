@@ -85,5 +85,24 @@
           - zabbix-nginx-conf
           - zabbix-sql-scripts
           - zabbix-agent
+          - postgresql
+          - python3-psycopg2
         state: present
+
+    - name: DB user zabbix
+      community.postgresql.postgresql_user:
+        name: zabbix
+        password: "{{ lookup('password', 'credentials/zabbix_db_password length=16
+          chars=ascii_letters,digits') }}"
+        state: present
+      become: true
+      become_user: postgres
+
+    - name: Create DB for zabbix
+      community.postgresql.postgresql_db:
+        name: zabbix
+        owner: zabbix
+        state: present
+      become: true
+      become_user: postgres
 ...
