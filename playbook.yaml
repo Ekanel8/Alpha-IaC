@@ -75,4 +75,15 @@
     - name: Cache apt
       apt:
         update_cache: yes
+
+    - name: Zabbix pkgs extra
+      apt:
+        name:
+          - zabbix-server-pgsql
+          - zabbix-frontend-php
+          - php8.4-pgsql
+          - zabbix-nginx-conf
+          - zabbix-sql-scripts
+          - zabbix-agent
+        state: present
 ...
