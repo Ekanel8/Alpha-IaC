@@ -5,7 +5,9 @@
 
   vars:
     env_vars: "{{ lookup('file', '.env') | from_yaml }}"
-    domain_name: "{{ look('env', 'TARGET_DOMAIN') | default('infra.net', true) }}"
+    domain_name: "{{ env_vars.TARGET_DOMAIN }}"
+    dns_ip_addr: "{{ env_vars.DNS_SERVER }}"
+
   tasks:
 
   - name: Ping servers
@@ -32,8 +34,8 @@
     copy:
       dest: /etc/resolv.conf
       content: |
-        nameserver 192.168.0.10
-        search infra.net
+        nameserver {{ dns_ip_addr }}
+        search {{ domain_name }}
 
   - name: ntpsec conf
     template:
@@ -48,5 +50,16 @@
   - name: Set timezone
     timezone:
       name: Europe/Minsk
+ 
+  - name: Create custom rsyslog configuration
+    template:
+      src: logs.conf
+      dest: /etc/rsyslog.d/logs.conf
+
+  - name: Restart rsyslog
+    service:
+      name: rsyslog
+      state: restarted
+
 
 ...
