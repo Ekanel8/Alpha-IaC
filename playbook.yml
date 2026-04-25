@@ -47,6 +47,6 @@
 
   - name: Set timezone
     timezone:
-      name: Europe/Moscow
+      name: Europe/Minsk
 
 ...
