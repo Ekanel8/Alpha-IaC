@@ -1,0 +1,78 @@
+---
+- name: Task-1
+  hosts: all
+  become: true
+
+  vars:
+    env_vars: "{{ lookup('file', '.env') | from_yaml }}"
+    domain_name: "{{ env_vars.TARGET_DOMAIN }}"
+    dns_ip_addr: "{{ env_vars.DNS_SERVER }}"
+
+  tasks:
+
+    - name: Ping servers
+      ping:
+
+    - name: Core pkgs installation
+      apt:
+        name:
+          - iptables
+          - htop
+          - ntpsec
+          - curl
+          - wget
+          - rsyslog
+          - fail2ban
+          - auditd
+          - net-tools
+          - dkms
+          - linux-headers-amd64
+          - build-essential
+          - acl
+        state: latest
+
+    - name: Set local DNS server
+      copy:
+        dest: /etc/resolv.conf
+        content: |
+          nameserver {{ dns_ip_addr }}
+          search {{ domain_name }}
+
+    - name: ntpsec conf
+      template:
+        src: ntp.conf
+        dest: /etc/ntpsec/ntp.conf
+
+    - name: ntpsec restart
+      service:
+        name: ntpsec
+        state: restarted
+
+    - name: Set timezone
+      timezone:
+        name: Europe/Minsk
+
+    - name: Create custom rsyslog configuration
+      template:
+        src: logs.conf
+        dest: /etc/rsyslog.d/logs.conf
+
+    - name: Restart rsyslog
+      service:
+        name: rsyslog
+        state: restarted
+
+    - name: Zabbix installation
+      get_url:
+        url: https://repo.zabbix.com/zabbix/7.4/release/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.4+debian13_all.deb
+        dest: /tmp/zabbix-release_7.4.deb
+
+    - name: installation dpkg
+      apt:
+        deb: /tmp/zabbix-release_7.4.deb
+        state: present
+
+    - name: Cache apt
+      apt:
+        update_cache: yes
+...
