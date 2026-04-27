@@ -89,20 +89,81 @@
           - python3-psycopg2
         state: present
 
-    - name: DB user zabbix
-      community.postgresql.postgresql_user:
-        name: zabbix
-        password: "{{ lookup('password', 'credentials/zabbix_db_password length=16
-          chars=ascii_letters,digits') }}"
-        state: present
-      become: true
-      become_user: postgres
-
     - name: Create DB for zabbix
       community.postgresql.postgresql_db:
         name: zabbix
         owner: zabbix
         state: present
-      become: true
       become_user: postgres
+
+    - name: DB user zabbix
+      community.postgresql.postgresql_user:
+        name: zabbix
+        password: "{{ lookup('password', 'credentials/zabbix_user_password length=16
+          chars=ascii_letters,digits,punctuation') }}"
+        state: present
+      become_user: postgres
+
+    - name: Unpack server.sql.gz в /tmp
+      shell: gunzip -c /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz >
+        /tmp/server.sql
+      args:
+        creates: /tmp/server.sql
+      become: true
+
+    - name: Check if Zabbix DB is empty
+      community.postgresql.postgresql_query:
+        db: zabbix
+        query: "SELECT to_regclass('public.users');"
+      register: zbx_check
+      become_user: postgres
+
+    - name: Import default PostgreSQL
+      community.postgresql.postgresql_script:
+        db: zabbix
+        path: /tmp/server.sql
+        encoding: UTF-8
+      when: zbx_check.query_result[0].to_regclass is none
+      become_user: postgres
+
+    - name: DBPassword
+      ansible.builtin.replace:
+        path: /etc/zabbix/zabbix_server.conf
+        regexp: "^#?\\s*DBPassword=.*"
+        replace: "DBPassword={{ lookup('password', 'credentials/zabbix_db_password
+          length=16 chars=ascii_letters,digits,punctuation') }}"
+
+    - name: Enable listen 8080 in Zabbix nginx config
+      ansible.builtin.replace:
+        path: /etc/zabbix/nginx.conf
+        regexp: "^#\\s*listen\\s*8080\\s*;"
+        replace: "listen 8080;"
+
+    - name: Set server_name in Zabbix nginx config
+      ansible.builtin.replace:
+        path: /etc/zabbix/nginx.conf
+        regexp: "^(\\s*)#\\s*server_name.*"
+        replace: "\\1server_name zbx.com;"
+
+    - name: Restart Zabbix stack services
+      service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - zabbix-server
+        - zabbix-agent
+        - nginx
+        - php8.4-fpm
+      become: true
+
+    - name: Enable Zabbix stack services
+      service:
+        name: "{{ item }}"
+        enabled: true
+      loop:
+        - zabbix-server
+        - zabbix-agent
+        - nginx
+        - php8.4-fpm
+      become: true
 ...
