@@ -89,18 +89,18 @@
           - python3-psycopg2
         state: present
 
+    - name: DB user zabbix
+      community.postgresql.postgresql_user:
+        name: zabbix
+        password: "{{ lookup('password', 'credentials/zabbix_password length=16
+          chars=ascii_letters,digits') }}"
+        state: present
+      become_user: postgres
+
     - name: Create DB for zabbix
       community.postgresql.postgresql_db:
         name: zabbix
         owner: zabbix
-        state: present
-      become_user: postgres
-
-    - name: DB user zabbix
-      community.postgresql.postgresql_user:
-        name: zabbix
-        password: "{{ lookup('password', 'credentials/zabbix_user_password length=16
-          chars=ascii_letters,digits,punctuation') }}"
         state: present
       become_user: postgres
 
@@ -130,8 +130,8 @@
       ansible.builtin.replace:
         path: /etc/zabbix/zabbix_server.conf
         regexp: "^#?\\s*DBPassword=.*"
-        replace: "DBPassword={{ lookup('password', 'credentials/zabbix_db_password
-          length=16 chars=ascii_letters,digits,punctuation') }}"
+        replace: "DBPassword={{ lookup('password', 'credentials/zabbix_password
+          length=16 chars=ascii_letters,digits') }}"
 
     - name: Enable listen 8080 in Zabbix nginx config
       ansible.builtin.replace:
