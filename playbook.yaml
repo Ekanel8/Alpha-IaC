@@ -113,18 +113,21 @@
 
     - name: Check if Zabbix DB is empty
       community.postgresql.postgresql_query:
-        db: zabbix
+        login_db: zabbix
         query: "SELECT to_regclass('public.users');"
       register: zbx_check
       become_user: postgres
 
     - name: Import default PostgreSQL
       community.postgresql.postgresql_script:
-        db: zabbix
+        login_db: zabbix
+        login_user: zabbix
         path: /tmp/server.sql
         encoding: UTF-8
+      vars:
+        ansible_remote_tmp: /tmp
       when: zbx_check.query_result[0].to_regclass is none
-      become_user: postgres
+      become_user: zabbix
 
     - name: DBPassword
       ansible.builtin.replace:
