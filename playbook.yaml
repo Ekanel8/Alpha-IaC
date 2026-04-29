@@ -130,14 +130,14 @@
       become_user: zabbix
 
     - name: DBPassword
-      ansible.builtin.replace:
+      replace:
         path: /etc/zabbix/zabbix_server.conf
         regexp: "^#?\\s*DBPassword=.*"
         replace: "DBPassword={{ lookup('password', 'credentials/zabbix_password
           length=16 chars=ascii_letters,digits') }}"
 
     - name: Enable listen 8080 in Zabbix nginx config
-      ansible.builtin.replace:
+      replace:
         path: /etc/zabbix/nginx.conf
         regexp: "^#\\s*listen\\s*8080\\s*;"
         replace: "listen 8080;"
@@ -169,4 +169,60 @@
         - nginx
         - php8.4-fpm
       become: true
+
+    - name: sisadmin user
+      user:
+        name: JohnDoe
+        state: present
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Ensure group "admins" exists
+      group:
+        name: admins
+        state: present
+
+    - name: User to group
+      user:
+        name: JohnDoe
+        groups: admins
+        append: yes
+
+    - name: User SSH gen
+      authorized_key:
+        user: JohnDoe
+        state: present
+        key: "{{ lookup('file', './ansible.pub') }}"
+
+    - name: Change file ownership, group and permissions
+      file:
+        path: ~/.ssh
+        owner: packer
+        group: admins
+        mode: "700"
+
+    - name: Change file ownership, group and permissions
+      file:
+        path: /home/packer/.ssh/authorized_keys
+        owner: packer
+        group: admins
+        mode: "600"
+
+    - name: Permit root login
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: "^#PermitRootLogin prohibit-password$"
+        replace: "PermitRootLogin no"
+
+    - name: SSH logs 1/2
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: "^#SyslogFacility AUTH$"
+        replace: "SyslogFacility AUTH"
+
+    - name: SSH logs 2/2
+      replace:
+        path: /etc/ssh/sshd_config
+        regexp: "^#LogLevel INFO"
+        replace: "LogLevel INFO"
 ...
