@@ -136,17 +136,17 @@
         replace: "DBPassword={{ lookup('password', 'credentials/zabbix_password
           length=16 chars=ascii_letters,digits') }}"
 
-    - name: Enable listen 8080 in Zabbix nginx config
+    - name: Enable listen localhost:8080 in Zabbix nginx config
       replace:
         path: /etc/zabbix/nginx.conf
         regexp: "^#\\s*listen\\s*8080\\s*;"
-        replace: "listen 8080;"
+        replace: "listen 127.0.0.1:8080;"
 
     - name: Set server_name in Zabbix nginx config
       ansible.builtin.replace:
         path: /etc/zabbix/nginx.conf
         regexp: "^(\\s*)#\\s*server_name.*"
-        replace: "\\1server_name zbx.com;"
+        replace: "\\1server_name zabix.{{ domain_name }};"
 
     - name: Restart Zabbix stack services
       service:
@@ -270,7 +270,7 @@
         - kernel.yama.ptrace_scope # SYN-FLOOD
         - net.ipv4.icmp_echo_ignore_broadcasts #smurf
 
-    - name: kernel defender options 2/2/
+    - name: kernel defender options 2/2
       sysctl:
         name: "{{ item }}"
         value: "0"
