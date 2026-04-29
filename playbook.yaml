@@ -279,7 +279,6 @@
       loop:
         - net.ipv4.conf.default.accept_redirects #maninthemiddle
         - net.ipv4.conf.all.accept_redirects #ICMP
-        - net.ipv4.conf.default.accept_redirects # ICMP
 
     - name: Create directory for SSL
       file:
