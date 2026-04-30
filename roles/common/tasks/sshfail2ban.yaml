@@ -1,0 +1,61 @@
+---
+- name: Change file ownership, group and permissions
+  file:
+    path: ~/.ssh
+    owner: "{{ useruser }}"
+    group: admins
+    mode: "700"
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /home/"{{ useruser }}"/.ssh/authorized_keys
+    owner: "{{ useruser }}"
+    group: admins
+    mode: "600"
+
+- name: Permit root login
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: "^#PermitRootLogin prohibit-password$"
+    replace: "PermitRootLogin no"
+
+- name: SSH logs 1/2
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: "^#SyslogFacility AUTH$"
+    replace: "SyslogFacility AUTH"
+
+- name: SSH logs 2/2
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: "^#LogLevel INFO$"
+    replace: "LogLevel INFO"
+
+- name: fail2ban
+  replace:
+    path: /etc/fail2ban/jail.conf
+    regexp: "^maxmatches = %(maxretry)s$"
+    replace: "maxmatches = 5"
+
+- name: fail2ban [sshd]
+  ini_file:
+    path: /etc/fail2ban/jail.conf
+    section: sshd
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+  loop:
+    - { key: "enabled", value: "true" }
+    - { key: "port", value: "ssh" }
+    - { key: "logpath", value: "%(sshd_log)s" }
+    - { key: "maxretry", value: "5" }
+
+- name: enable fail2ban
+  service:
+    name: fail2ban
+    enabled: true
+
+- name: restart fail2ban
+  service:
+    name: fail2ban
+    state: restarted

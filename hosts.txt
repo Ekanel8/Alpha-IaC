@@ -1,5 +1,5 @@
 [virtual]
 
-linux-1 ansible_host=192.168.0.112 
+linux-1 ansible_host=192.168.0.106
 
 

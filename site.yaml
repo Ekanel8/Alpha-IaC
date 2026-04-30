@@ -1,0 +1,6 @@
+---
+- name: Main file to apply Alpha conf
+  hosts: all
+  become: true
+  roles:
+    - common

@@ -1,0 +1,15 @@
+---
+
+- name: Create directory for SSL
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    mode: "0755"
+
+- name: Generate self-signed TLS certificates
+  command: >
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout
+    /etc/nginx/ssl/zabbix.key -out /etc/nginx/ssl/zabbix.crt -subj
+    "/CN=zabbix.{{ domain_name }}"
+  args:
+    creates: /etc/nginx/ssl/zabbix.crt
