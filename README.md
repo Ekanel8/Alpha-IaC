@@ -1,4 +1,13 @@
-# Ansible Zabbix Infrastructure Playbook
+# Ansible Zabbix Playbook
+<div align="center">
+
+<img src="[https://img.shields.io/badge/Ansible-E03235?style=for-the-badge&logo=ansible&logoColor=white](https://img.shields.io/badge/Ansible-E03235?style=for-the-badge&logo=ansible&logoColor=white)" />
+<img src="[https://img.shields.io/badge/Zabbix-CC0000?style=for-the-badge&logo=zabbix&logoColor=white](https://img.shields.io/badge/Zabbix-CC0000?style=for-the-badge&logo=zabbix&logoColor=white)" />
+<img src="[https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)" />
+<img src="[https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)" />
+<img src="[https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white](https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)" />
+
+</div>
 
 ## Overview
 This project provides an automated Ansible playbook for provisioning and hardening a Linux server with:
