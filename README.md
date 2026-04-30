@@ -1,11 +1,11 @@
 # Ansible Zabbix Playbook
 <div align="center">
 
-<img src="[https://img.shields.io/badge/Ansible-E03235?style=for-the-badge&logo=ansible&logoColor=white](https://img.shields.io/badge/Ansible-E03235?style=for-the-badge&logo=ansible&logoColor=white)" />
-<img src="[https://img.shields.io/badge/Zabbix-CC0000?style=for-the-badge&logo=zabbix&logoColor=white](https://img.shields.io/badge/Zabbix-CC0000?style=for-the-badge&logo=zabbix&logoColor=white)" />
-<img src="[https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)" />
-<img src="[https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)" />
-<img src="[https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white](https://img.shields.io/badge/Debian-A81D33?style=for-the-badge&logo=debian&logoColor=white)" />
+<img src="https://img.shields.io/badge/Ansible-37474F?logo=ansible&logoColor=EE0000" />
+<img src="https://img.shields.io/badge/Zabbix-CC0000?logo=Zabbix&logoColor=white" />
+<img src="https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white" />
+<img src="https://img.shields.io/badge/Postgresql-4169E1?logo=postgresql&logoColor=white" />
+<img src="https://img.shields.io/badge/Debian-D70A53?logo=debian&logoColor=white" />
 
 </div>
 
