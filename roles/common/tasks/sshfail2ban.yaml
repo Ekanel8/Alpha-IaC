@@ -8,7 +8,7 @@
 
 - name: Change file ownership, group and permissions
   file:
-    path: /home/"{{ useruser }}"/.ssh/authorized_keys
+    path: "/home/{{ useruser }}/.ssh/authorized_keys"
     owner: "{{ useruser }}"
     group: admins
     mode: "600"
