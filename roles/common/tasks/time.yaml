@@ -1,10 +1,10 @@
 ---
-#- name: Set local DNS server
-#  copy:
-#    dest: /etc/resolv.conf
-#    content: |
-#      nameserver {{ dns_ip_addr }}
-#      search {{ domain_name }}
+- name: Set local DNS server
+  copy:
+    dest: /etc/resolv.conf
+    content: |
+      nameserver {{ dns_ip_addr }}
+      search {{ domain_name }}
 
 - name: ntpsec conf
   template:
