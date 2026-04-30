@@ -80,6 +80,12 @@ This project provides an automated Ansible playbook for provisioning and hardeni
   - `sudo`
   - `openssh`
 
+/etc/sudoers
+
+```bash
+<user>   ALL=(ALL:ALL) NOPASSWD: ALL
+```
+
 ---
 
 ## Setup Instructions
