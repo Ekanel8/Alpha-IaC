@@ -1,0 +1,10 @@
+---
+- name: Create custom rsyslog configuration
+  template:
+    src: logs.conf
+    dest: /etc/rsyslog.d/logs.conf
+
+- name: Restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted

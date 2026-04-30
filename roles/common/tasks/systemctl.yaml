@@ -1,0 +1,22 @@
+---
+- name: Restart Zabbix stack services
+  service:
+    name: "{{ item }}"
+    state: restarted
+  loop:
+    - zabbix-server
+    - zabbix-agent
+    - nginx
+    - php8.4-fpm
+  become: true
+
+- name: Enable Zabbix stack services
+  service:
+    name: "{{ item }}"
+    enabled: true
+  loop:
+    - zabbix-server
+    - zabbix-agent
+    - nginx
+    - php8.4-fpm
+  become: true

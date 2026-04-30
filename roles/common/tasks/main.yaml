@@ -1,0 +1,42 @@
+---
+- name: Step 0 - Check connectivity
+  import_tasks: ping.yaml
+
+- name: Step 1 - configuration Check
+  import_tasks: isconf.yaml
+
+- name: Step 2 - Install essential software
+  import_tasks: install.yaml
+
+- name: Step 3 - Time
+  import_tasks: time.yaml
+
+- name: Step 4 - rsyslog to domain
+  import_tasks: rsyslog.yaml
+
+- name: Step 5 - Install Zabbix
+  import_tasks: zabbixinit.yaml
+
+- name: Step 6 - PostgreSQL conf
+  import_tasks: database.yaml
+
+- name: Step 7 - nginx conf
+  import_tasks: nginx.yaml
+
+- name: Step 8 - systemctl conf
+  import_tasks: systemctl.yaml
+
+- name: Step 9 - Admin user
+  import_tasks: user.yaml
+
+- name: Step 10 - SSH & fail2ban
+  import_tasks: sshfail2ban.yaml
+
+- name: Step 11 - kernel
+  import_tasks: kernel.yaml
+
+- name: Step 12 - ssl
+  import_tasks: ssl.yaml
+
+- name: Step 13 - Proxy
+  import_tasks: proxy.yaml

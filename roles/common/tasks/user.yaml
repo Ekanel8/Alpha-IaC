@@ -1,0 +1,24 @@
+---
+- name: sysadmin user
+  user:
+    name: "{{ useruser }}"
+    state: present
+    shell: /bin/bash
+    create_home: yes
+
+- name: Ensure group "admins" exists
+  group:
+    name: admins
+    state: present
+
+- name: User to group
+  user:
+    name: "{{ useruser }}"
+    groups: admins
+    append: yes
+
+- name: User SSH gen
+  authorized_key:
+    user: "{{ useruser }}"
+    state: present
+    key: "{{ lookup('file', './keys/ansible.pub') }}"

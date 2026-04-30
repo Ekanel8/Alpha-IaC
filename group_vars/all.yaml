@@ -1,0 +1,5 @@
+env_vars: "{{ lookup('file', '.env') | from_yaml }}"
+domain_name: "{{ env_vars.TARGET_DOMAIN }}"
+dns_ip_addr: "{{ env_vars.DNS_SERVER }}"
+useruser: "{{ env_vars.ADMIN_USER }}"
+timezone: "{{ env_vars.TIME_ZONE }}"

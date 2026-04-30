@@ -1,0 +1,47 @@
+---
+- name: DB user zabbix
+  community.postgresql.postgresql_user:
+    name: zabbix
+    password: "{{ lookup('password', 'credentials/zabbix_password length=16
+      chars=ascii_letters,digits') }}"
+    state: present
+  become_user: postgres
+
+- name: Create DB for zabbix
+  community.postgresql.postgresql_db:
+    name: zabbix
+    owner: zabbix
+    state: present
+  become_user: postgres
+
+- name: Unpack server.sql.gz в /tmp
+  shell: gunzip -c /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz >
+    /tmp/server.sql
+  args:
+    creates: /tmp/server.sql
+  become: true
+
+- name: Check if Zabbix DB is empty
+  community.postgresql.postgresql_query:
+    login_db: zabbix
+    query: "SELECT to_regclass('public.users');"
+  register: zbx_check
+  become_user: postgres
+
+- name: Import default PostgreSQL
+  community.postgresql.postgresql_script:
+    login_db: zabbix
+    login_user: zabbix
+    path: /tmp/server.sql
+    encoding: UTF-8
+  vars:
+    ansible_remote_tmp: /tmp
+  when: zbx_check.query_result[0].to_regclass is none
+  become_user: zabbix
+
+- name: DBPassword
+  replace:
+    path: /etc/zabbix/zabbix_server.conf
+    regexp: "^#?\\s*DBPassword=.*"
+    replace: "DBPassword={{ lookup('password', 'credentials/zabbix_password
+      length=16 chars=ascii_letters,digits') }}"

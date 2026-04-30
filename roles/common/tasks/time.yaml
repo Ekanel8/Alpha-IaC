@@ -1,0 +1,21 @@
+---
+#- name: Set local DNS server
+#  copy:
+#    dest: /etc/resolv.conf
+#    content: |
+#      nameserver {{ dns_ip_addr }}
+#      search {{ domain_name }}
+
+- name: ntpsec conf
+  template:
+    src: ntp.conf
+    dest: /etc/ntpsec/ntp.conf
+
+- name: ntpsec restart
+  service:
+    name: ntpsec
+    state: restarted
+
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"

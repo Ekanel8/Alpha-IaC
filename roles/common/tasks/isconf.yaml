@@ -1,0 +1,11 @@
+---
+- name: "critical"
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  register: file_check
+  with_items:
+    - "{{ playbook_dir }}/.env"
+    - "{{ playbook_dir }}/conf/logs.conf"
+    - "{{ playbook_dir }}/conf/ntp.conf"
+    - "{{ playbook_dir }}/keys/ansible"
+    - "{{ playbook_dir }}/keys/ansible.pub"

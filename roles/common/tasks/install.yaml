@@ -1,0 +1,17 @@
+- name: Core pkgs installation
+  apt:
+    name:
+      - iptables
+      - htop
+      - ntpsec
+      - curl
+      - wget
+      - rsyslog
+      - fail2ban
+      - auditd
+      - net-tools
+      - dkms
+      - linux-headers-amd64
+      - build-essential
+      - acl
+    state: latest
