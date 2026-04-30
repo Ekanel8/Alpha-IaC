@@ -1,0 +1,3 @@
+env_vars: "{{ lookup('file', '.env') | from_yaml }}"
+domain_name: "{{ env_vars.TARGET_DOMAIN }}"
+dns_ip_addr: "{{ env_vars.DNS_SERVER }}"
